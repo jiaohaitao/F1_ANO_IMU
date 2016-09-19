@@ -20,48 +20,30 @@ void LED_GPIO_Config()
 	//step4 这以后就可以用这个gpio了
 	GPIO_InitStructure.GPIO_Mode=GPIO_Mode_Out_PP ;
 
-	GPIO_InitStructure.GPIO_Pin=(GPIO_Pin_3|GPIO_Pin_4|GPIO_Pin_5);
+	GPIO_InitStructure.GPIO_Pin=(GPIO_Pin_13);
 
 	GPIO_InitStructure.GPIO_Speed=GPIO_Speed_50MHz ;  
 
 	GPIO_Init(GPIOC,&GPIO_InitStructure);
 
-	GPIO_SetBits (GPIOC,GPIO_Pin_3|GPIO_Pin_4|GPIO_Pin_5);
+	GPIO_SetBits (GPIOC,GPIO_Pin_13);
 		
 }
 void LED_OFF()
 {
-	GPIO_SetBits (GPIOC,GPIO_Pin_3|GPIO_Pin_4|GPIO_Pin_5);
+	GPIO_SetBits (GPIOC,GPIO_Pin_13);
 }
 void LED_ON()
 {
-	GPIO_ResetBits (GPIOC,GPIO_Pin_3|GPIO_Pin_4|GPIO_Pin_5);
+	GPIO_ResetBits (GPIOC,GPIO_Pin_13);
 }
-
-void LED1_OFF()
+void LED_ON_OFF()
 {
-  GPIO_SetBits (GPIOC,GPIO_Pin_3);
+	if(GPIO_ReadOutputDataBit(GPIOC,GPIO_Pin_13)==0){
+		GPIO_SetBits (GPIOC,GPIO_Pin_13);
+	}
+	else{
+		GPIO_ResetBits (GPIOC,GPIO_Pin_13);
+	}
+	
 }
-void LED1_ON()
-{
-  GPIO_ResetBits (GPIOC,GPIO_Pin_3);
-}
-
-void LED2_OFF()
-{
-  GPIO_SetBits (GPIOC,GPIO_Pin_4);
-}
-void LED2_ON()
-{
-  GPIO_ResetBits (GPIOC,GPIO_Pin_4);
-}
-
-void LED3_OFF()
-{
-  GPIO_SetBits (GPIOC,GPIO_Pin_5);
-}
-void LED3_ON()
-{
-  GPIO_ResetBits (GPIOC,GPIO_Pin_5);
-}
-

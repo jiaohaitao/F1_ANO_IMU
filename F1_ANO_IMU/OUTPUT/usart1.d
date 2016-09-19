@@ -8,6 +8,7 @@
 ..\output\usart1.o: ..\LIB\inc\stm32f10x_gpio.h
 ..\output\usart1.o: ..\CMSIS\stm32f10x.h
 ..\output\usart1.o: ..\LIB\inc\stm32f10x_rcc.h
+..\output\usart1.o: ..\LIB\inc\stm32f10x_tim.h
 ..\output\usart1.o: ..\LIB\inc\stm32f10x_usart.h
 ..\output\usart1.o: ..\LIB\inc\misc.h
 ..\output\usart1.o: d:\Keil_v5\ARM\ARMCC\bin\..\include\stdio.h

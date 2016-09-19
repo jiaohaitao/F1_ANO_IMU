@@ -8,6 +8,7 @@
 ..\output\stm32f10x_it.o: ..\LIB\inc\stm32f10x_gpio.h
 ..\output\stm32f10x_it.o: ..\CMSIS\stm32f10x.h
 ..\output\stm32f10x_it.o: ..\LIB\inc\stm32f10x_rcc.h
+..\output\stm32f10x_it.o: ..\LIB\inc\stm32f10x_tim.h
 ..\output\stm32f10x_it.o: ..\LIB\inc\stm32f10x_usart.h
 ..\output\stm32f10x_it.o: ..\LIB\inc\misc.h
 ..\output\stm32f10x_it.o: usart1.h
