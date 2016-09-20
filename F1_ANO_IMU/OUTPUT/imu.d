@@ -13,7 +13,6 @@
 ..\output\imu.o: ..\LIB\inc\misc.h
 ..\output\imu.o: mymath.h
 ..\output\imu.o: d:\Keil_v5\ARM\ARMCC\bin\..\include\math.h
-..\output\imu.o: include.h
 ..\output\imu.o: ak8975.h
-..\output\imu.o: d:\Keil_v5\ARM\ARMCC\bin\..\include\stdbool.h
+..\output\imu.o: include.h
 ..\output\imu.o: mymath.h

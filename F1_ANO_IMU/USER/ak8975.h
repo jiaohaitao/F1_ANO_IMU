@@ -2,7 +2,6 @@
 #define	_AK8975_H_
 
 #include "stm32f10x.h"
-#include "stdbool.h"
 #include "include.h"
 
 #define CALIBRATING_MAG_CYCLES              2000  //校准时间持续20s
@@ -28,22 +27,15 @@
 #define HMC5883_HZL     0x06
 #define HMC5883_HZH     0x05
 
-typedef struct 
-{
-	xyz_s16_t Mag_Adc;			//采样值
-	xyz_f_t Mag_Offset;		//偏移值
-	xyz_f_t 	Mag_Gain;			//比例缩放	
-  xyz_f_t 	Mag_Val;			//纠正后的值
-}ak8975_t;
 
-extern ak8975_t ak8975;
 
-bool ANO_AK8975_Run(void);
-void ANO_AK8975_CalOffset_Mag(void);
+extern short AK8975_Mag_Data[3]; 
+
+
+unsigned char AK8975_Init(void);
+unsigned char ANO_AK8975_Run(void);
 void ANO_AK8975_Read(void);
 
-
-extern u8 Mag_CALIBRATED;
 extern u8 ak8975_ok;
 
 #endif

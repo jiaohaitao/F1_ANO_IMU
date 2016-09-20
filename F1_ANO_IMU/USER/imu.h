@@ -2,12 +2,14 @@
 #define	_IMU_H_
 
 #include "stm32f10x.h"
-
-//#include "parameter.h"
 #include "mymath.h"
 #include "math.h"
-#include "include.h"
-
+typedef struct 
+{
+  float x;
+	float y;
+	float z;
+}xyz_f_t;
 typedef struct 
 {
 	xyz_f_t err;
@@ -21,7 +23,5 @@ typedef struct
 extern xyz_f_t reference_v,acc_3d_hg;
 void IMUupdate(float half_T,float gx, float gy, float gz, float ax, float ay, float az,float *rol,float *pit,float *yaw);
 extern float Roll,Pitch,Yaw;
-
-
 #endif
 

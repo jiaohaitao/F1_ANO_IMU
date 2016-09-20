@@ -3,48 +3,18 @@
 
 #include "stm32f10x.h"
 
-#include "include.h"
-
 #define GYRO_DEATH_ZOOM 20   //  20 / 65536
 
 #define OFFSET_AV_NUM 50
 #define FILTER_NUM 10
 
+#define TO_ANGLE 				0.06103f 		//0.061036 //   4000/65536  +-2000   ???
 
-
-
-typedef struct 
-{
-	char Acc_CALIBRATE;
-	char Gyro_CALIBRATE;
-	char Cali_3d;
-  xyz_s16_t Acc_I16;
-	xyz_s16_t Gyro_I16;
-
-	xyz_f_t Acc;
-	xyz_f_t Gyro;
-
-//	XYZ_STRUCT Acc_deg;
-	xyz_f_t Gyro_deg;
-	
-	xyz_f_t Acc_Offset;
-	xyz_f_t Gyro_Offset;
-	xyz_f_t Gyro_Auto_Offset;
-	xyz_f_t vec_3d_cali;
-	float Acc_Temprea_Offset;
-	float Gyro_Temprea_Offset;
-	
-	float Gyro_Temprea_Adjust;
-	float ACC_Temprea_Adjust;
-
-	s16 Tempreature;
-	float TEM_LPF;
-	float Ftempreature;
-}MPU6050_STRUCT;
-
-extern MPU6050_STRUCT mpu6050;
-extern float mpu6050_tmp[ITEMS];
-extern u8 acc_3d_calibrate_f,acc_3d_step;
+extern short Mpu6050_Acc_Data[3];
+extern short Mpu6050_Gyo_Data[3];
+extern float Mpu6050_Gyo_Deg_Data[3];
+extern short Mpu6050_Acc_Offset_Data[3];
+extern short Mpu6050_Gyo_Offset_Data[3];
 
 
 #define MPU6050_ADDR         			  MPU6050_ADDRESS_AD0_LOW
@@ -401,8 +371,6 @@ extern u8 acc_3d_calibrate_f,acc_3d_step;
 
 void MPU6050_Init(u16);
 void MPU6050_Read(void);
-
-void MPU6050_Data_Prepare(float T);
 extern u8 mpu6050_ok;
 
 #endif

@@ -11,6 +11,5 @@
 ..\output\mpu6050.o: ..\LIB\inc\stm32f10x_tim.h
 ..\output\mpu6050.o: ..\LIB\inc\stm32f10x_usart.h
 ..\output\mpu6050.o: ..\LIB\inc\misc.h
-..\output\mpu6050.o: include.h
 ..\output\mpu6050.o: mymath.h
 ..\output\mpu6050.o: i2c_soft.h

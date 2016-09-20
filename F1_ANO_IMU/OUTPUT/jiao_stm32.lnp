@@ -9,6 +9,7 @@
 "..\output\mpu6050.o"
 "..\output\mymath.o"
 "..\output\imu.o"
+"..\output\uartdebug.o"
 "..\output\misc.o"
 "..\output\stm32f10x_gpio.o"
 "..\output\stm32f10x_rcc.o"

@@ -11,7 +11,6 @@
 ..\output\ak8975.o: ..\LIB\inc\stm32f10x_tim.h
 ..\output\ak8975.o: ..\LIB\inc\stm32f10x_usart.h
 ..\output\ak8975.o: ..\LIB\inc\misc.h
-..\output\ak8975.o: d:\Keil_v5\ARM\ARMCC\bin\..\include\stdbool.h
 ..\output\ak8975.o: include.h
 ..\output\ak8975.o: mymath.h
 ..\output\ak8975.o: i2c_soft.h

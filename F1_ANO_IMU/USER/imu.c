@@ -8,10 +8,8 @@
 **********************************************************************************/
 
 #include "imu.h"
-#include "include.h"
 #include "ak8975.h"
 #include "mymath.h"
-//#include "filter.h"
 
 #define Kp 0.3f                	// proportional gain governs rate of convergence to accelerometer/magnetometer
 #define Ki 0.0f                	// 0.001  integral gain governs rate of convergence of gyroscope biases
@@ -65,6 +63,7 @@ int Yaw_Cnt=0,i;
 float Yaw_Sum=0;
 int Temp_Yaw=0;
 
+extern short AK8975_Mag_Data[3]; 
 void IMUupdate(float half_T,float gx, float gy, float gz, float ax, float ay, float az,float *rol,float *pit,float *yaw) 
 {		
 	float ref_err_lpf_hz;
@@ -73,15 +72,16 @@ void IMUupdate(float half_T,float gx, float gy, float gz, float ax, float ay, fl
 	static xyz_f_t mag_tmp;
 	static float yaw_mag;
 	
+	//ak8975.Mag_Val.x =ak8975.Mag_Val.y=ak8975.Mag_Val.z=0;
 	mag_norm_tmp = 20 *(6.28f *half_T);	
 	
-	mag_norm_xyz = my_sqrt(ak8975.Mag_Val.x * ak8975.Mag_Val.x + ak8975.Mag_Val.y * ak8975.Mag_Val.y + ak8975.Mag_Val.z * ak8975.Mag_Val.z);
+	mag_norm_xyz = my_sqrt(AK8975_Mag_Data[0] * AK8975_Mag_Data[0]  + AK8975_Mag_Data[1]  * AK8975_Mag_Data[1] + AK8975_Mag_Data[2] *AK8975_Mag_Data[2] );
 	
 		if( mag_norm_xyz != 0)
 	{
-		mag_tmp.x += mag_norm_tmp *( (float)ak8975.Mag_Val.x /( mag_norm_xyz ) - mag_tmp.x);
-		mag_tmp.y += mag_norm_tmp *( (float)ak8975.Mag_Val.y /( mag_norm_xyz ) - mag_tmp.y);	
-		mag_tmp.z += mag_norm_tmp *( (float)ak8975.Mag_Val.z /( mag_norm_xyz ) - mag_tmp.z);	
+		mag_tmp.x += mag_norm_tmp *( (float)AK8975_Mag_Data[0]  /( mag_norm_xyz ) - mag_tmp.x);
+		mag_tmp.y += mag_norm_tmp *( (float)AK8975_Mag_Data[1]  /( mag_norm_xyz ) - mag_tmp.y);	
+		mag_tmp.z += mag_norm_tmp *( (float)AK8975_Mag_Data[2]  /( mag_norm_xyz ) - mag_tmp.z);	
 	}
 
 	/*
@@ -111,26 +111,25 @@ void IMUupdate(float half_T,float gx, float gy, float gz, float ax, float ay, fl
 	//根据余弦矩阵和欧拉角的定义，地理坐标系的重力向量，转到机体坐标系，正好是这三个元素。
 	//所以这里的vx\y\z，其实就是当前的欧拉角（即四元数）的机体坐标参照系上，换算出来的重力单位向量。       
 	//=============================================================================
-
-	if(acc_ng_cali)
-	{
-		if(acc_ng_cali==2)
-		{
-			acc_ng_offset.x = 0;
-			acc_ng_offset.y = 0; 
-			acc_ng_offset.z = 0;
-		}
-			
-		acc_ng_offset.x += 10 *TO_M_S2 *(ax - 4096*reference_v.x) *0.0125f ;
-		acc_ng_offset.y += 10 *TO_M_S2 *(ay - 4096*reference_v.y) *0.0125f ;
-		acc_ng_offset.z += 10 *TO_M_S2 *(az - 4096*reference_v.z) *0.0125f ;	
-		
-		acc_ng_cali ++;
-		if(acc_ng_cali>=82) //start on 2
-		{
-			acc_ng_cali = 0;
-		}
-	}
+//	if(acc_ng_cali)
+//	{
+//		if(acc_ng_cali==2)
+//		{
+//			acc_ng_offset.x = 0;
+//			acc_ng_offset.y = 0; 
+//			acc_ng_offset.z = 0;
+//		}
+//			
+//		acc_ng_offset.x += 10 *TO_M_S2 *(ax - 4096*reference_v.x) *0.0125f ;
+//		acc_ng_offset.y += 10 *TO_M_S2 *(ay - 4096*reference_v.y) *0.0125f ;
+//		acc_ng_offset.z += 10 *TO_M_S2 *(az - 4096*reference_v.z) *0.0125f ;	
+//		
+//		acc_ng_cali ++;
+//		if(acc_ng_cali>=82) //start on 2
+//		{
+//			acc_ng_cali = 0;
+//		}
+//	}
 	
 	acc_ng.x = 10 *TO_M_S2 *(ax - 4096*reference_v.x) - acc_ng_offset.x;
 	acc_ng.y = 10 *TO_M_S2 *(ay - 4096*reference_v.y) - acc_ng_offset.y;
@@ -232,10 +231,12 @@ void IMUupdate(float half_T,float gx, float gy, float gz, float ax, float ay, fl
 	*pit = asin(2*(ref_q[1]*ref_q[3] - ref_q[0]*ref_q[2])) *57.3f;
 
 	*yaw = fast_atan2(2*(-ref_q[1]*ref_q[2] - ref_q[0]*ref_q[3]), 2*(ref_q[0]*ref_q[0] + ref_q[1]*ref_q[1]) - 1) *57.3f  ;// 
-	*yaw = yaw_mag;
+//	*yaw = yaw_mag;
+//	
+//	*rol*=-1;
+//	*pit*=-1;
 	
-	*rol*=-1;
-	*pit*=-1;
+	
 	
 //	if(*yaw<0)
 //		Temp_Yaw=*yaw*(-1.0);

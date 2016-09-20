@@ -11,22 +11,96 @@
 #include "mymath.h"
 #include "i2c_soft.h"
 
-MPU6050_STRUCT mpu6050;
+short Mpu6050_Acc_Data[3]={0};
+short Mpu6050_Gyo_Data[3]={0};
+float Mpu6050_Gyo_Deg_Data[3]={0.0};
+short Mpu6050_Acc_Offset_Data[3]={0};
+short Mpu6050_Gyo_Offset_Data[3]={0};
 
 u8 mpu6050_buffer[14];
-u8 mpu6050_ok;
+u8 mpu6050_ok=0;
+unsigned char mpu6050_offset_ok=0;
+
+#define MPU6050_FILTER_LENGTH	10
+__IO short MPU6050_ACC_FILTER_BUF[3][MPU6050_FILTER_LENGTH]={0};
+__IO short MPU6050_GYO_FILTER_BUF[3][MPU6050_FILTER_LENGTH]={0};
+__IO int	MPU6050_ACC_FILTER_SUM[3]={0};
+__IO int	MPU6050_GYO_FILTER_SUM[3]={0};
+unsigned int MPU6050_FILTER_CNT=0;
+
+
+unsigned char MPU6050_Get_Offset()
+{
+//		mpu6050.Acc_Offset.x=112;
+//	mpu6050.Acc_Offset.y=91;
+//	mpu6050.Acc_Offset.z=-144;	
+
+//	mpu6050.Gyro_Offset.x=-32;
+//	mpu6050.Gyro_Offset.y=29;
+//	mpu6050.Gyro_Offset.z=-14;	
+	Mpu6050_Acc_Offset_Data[0]=112;
+	Mpu6050_Acc_Offset_Data[1]=91;
+	Mpu6050_Acc_Offset_Data[2]=-144;	
+
+	Mpu6050_Gyo_Offset_Data[0]=-32;
+	Mpu6050_Gyo_Offset_Data[1]=29;
+	Mpu6050_Gyo_Offset_Data[2]=-14;
+	
+	return 1;
+}
 void MPU6050_Read(void)
 {
+	int i=0,j=0;
 	I2C_FastMode = 1;
 	IIC_Read_nByte(MPU6050_ADDR,MPU6050_RA_ACCEL_XOUT_H,14,mpu6050_buffer);
 	
-	mpu6050.Acc_I16.x = ((((int16_t)mpu6050_buffer[0]) << 8) | mpu6050_buffer[1]) ;
-	mpu6050.Acc_I16.y = ((((int16_t)mpu6050_buffer[2]) << 8) | mpu6050_buffer[3]) ;
-	mpu6050.Acc_I16.z = ((((int16_t)mpu6050_buffer[4]) << 8) | mpu6050_buffer[5]) ;
+	Mpu6050_Acc_Data[0] = ((((int16_t)mpu6050_buffer[0]) << 8) | mpu6050_buffer[1]) ;
+	Mpu6050_Acc_Data[1] = ((((int16_t)mpu6050_buffer[2]) << 8) | mpu6050_buffer[3]) ;
+	Mpu6050_Acc_Data[2] = ((((int16_t)mpu6050_buffer[4]) << 8) | mpu6050_buffer[5]) ;
  
-	mpu6050.Gyro_I16.x = ((((int16_t)mpu6050_buffer[ 8]) << 8) | mpu6050_buffer[ 9]) ;
-	mpu6050.Gyro_I16.y = ((((int16_t)mpu6050_buffer[10]) << 8) | mpu6050_buffer[11]) ;
-	mpu6050.Gyro_I16.z = ((((int16_t)mpu6050_buffer[12]) << 8) | mpu6050_buffer[13]) ;		
+	Mpu6050_Gyo_Data[0] = ((((int16_t)mpu6050_buffer[ 8]) << 8) | mpu6050_buffer[ 9]) ;
+	Mpu6050_Gyo_Data[1] = ((((int16_t)mpu6050_buffer[10]) << 8) | mpu6050_buffer[11]) ;
+	Mpu6050_Gyo_Data[2] = ((((int16_t)mpu6050_buffer[12]) << 8) | mpu6050_buffer[13]) ;		
+	
+	if(mpu6050_offset_ok==1){
+		for(i=0;i<3;i++){
+			Mpu6050_Acc_Data[i]-=Mpu6050_Acc_Offset_Data[i];
+			Mpu6050_Gyo_Data[i]-=Mpu6050_Gyo_Offset_Data[i];
+		}
+	}
+
+
+//----------------------filter deal----------------------------	
+	if(MPU6050_FILTER_CNT>=MPU6050_FILTER_LENGTH)
+		MPU6050_FILTER_CNT=0;
+	
+	for(i=0;i<3;i++){
+		MPU6050_ACC_FILTER_BUF[i][MPU6050_FILTER_CNT]=Mpu6050_Acc_Data[i];
+		MPU6050_GYO_FILTER_BUF[i][MPU6050_FILTER_CNT]=Mpu6050_Gyo_Data[i];
+	}
+	
+	MPU6050_FILTER_CNT++;
+	MPU6050_ACC_FILTER_SUM[0]=MPU6050_ACC_FILTER_SUM[1]=MPU6050_ACC_FILTER_SUM[2]=0;
+	MPU6050_GYO_FILTER_SUM[0]=MPU6050_GYO_FILTER_SUM[1]=MPU6050_GYO_FILTER_SUM[2]=0;
+	for(i=0;i<3;i++){
+		for(j=0;j<MPU6050_FILTER_LENGTH;j++){
+			MPU6050_ACC_FILTER_SUM[i]+=MPU6050_ACC_FILTER_BUF[i][j];		
+			MPU6050_GYO_FILTER_SUM[i]+=MPU6050_GYO_FILTER_BUF[i][j];		
+		}
+	}
+	
+	Mpu6050_Acc_Data[0] = MPU6050_ACC_FILTER_SUM[0]/MPU6050_FILTER_LENGTH;
+	Mpu6050_Acc_Data[1] = MPU6050_ACC_FILTER_SUM[1]/MPU6050_FILTER_LENGTH;
+	Mpu6050_Acc_Data[2] = MPU6050_ACC_FILTER_SUM[2]/MPU6050_FILTER_LENGTH;
+	
+	Mpu6050_Gyo_Data[0] = MPU6050_GYO_FILTER_SUM[0]/MPU6050_FILTER_LENGTH;
+	Mpu6050_Gyo_Data[1] = MPU6050_GYO_FILTER_SUM[1]/MPU6050_FILTER_LENGTH;
+	Mpu6050_Gyo_Data[2] = MPU6050_GYO_FILTER_SUM[2]/MPU6050_FILTER_LENGTH;	
+//--------------------------------------------------------------------	
+	
+	for(i=0;i<3;i++){
+		Mpu6050_Gyo_Deg_Data[i] = (float)Mpu6050_Gyo_Data[i] *TO_ANGLE;
+	}
 }
 
 
@@ -181,12 +255,12 @@ void Delay_ms(unsigned int x)
 {
 	unsigned int i,j;
 	for(i=0;i<x;i++)
-		for(j=0;j<10000;j++);
+		for(j=0;j<50000;j++);
 }
 void MPU6050_Init(u16 lpf)
 { 
 	u16 default_filter = 1;
-	
+	I2c_Soft_Init();
 	MPU6050_INT_Config();
 	
   switch(lpf)
@@ -216,7 +290,7 @@ void MPU6050_Init(u16 lpf)
 			default_filter = MPU6050_DLPF_BW_42;
 			break;
 	}
-	I2c_Soft_Init();
+	
 
 	//设备复位
 //	IIC_Write_1Byte(MPU6050_ADDR,MPU6050_RA_PWR_MGMT_1, 0x80);
@@ -238,113 +312,7 @@ void MPU6050_Init(u16 lpf)
 	MPU6050_setI2CBypassEnabled(1);	 //主控制器的I2C与	MPU6050的AUXI2C	直通。控制器可以直接访问HMC5883L
 	Delay_ms(10);
 	
-}
-
-s32 sum_temp[7]={0,0,0,0,0,0,0};
-u16 acc_sum_cnt = 0,gyro_sum_cnt = 0;
-
-void MPU6050_Data_Offset()
-{
-#ifdef ACC_ADJ_EN
-
-	if(mpu6050.Acc_CALIBRATE == 1)
-	{
-						if(my_sqrt(my_pow(mpu6050.Acc_I16.x)+my_pow(mpu6050.Acc_I16.y)+my_pow(mpu6050.Acc_I16.z)) < 2500)
-						{
-//							sensor_setup.Offset.mpu_flag = 1;
-						}
-						else if(my_sqrt(my_pow(mpu6050.Acc_I16.x)+my_pow(mpu6050.Acc_I16.y)+my_pow(mpu6050.Acc_I16.z)) > 2600)
-						{
-//							sensor_setup.Offset.mpu_flag = 0;
-						}
-						
-    acc_sum_cnt++;
-		sum_temp[A_X] += mpu6050.Acc_I16.x;
-		sum_temp[A_Y] += mpu6050.Acc_I16.y;
-		sum_temp[A_Z] += mpu6050.Acc_I16.z - 65536/16;   // +-8G
-		sum_temp[TEM] += mpu6050.Tempreature;
-
-    if( acc_sum_cnt >= OFFSET_AV_NUM )
-		{
-			mpu6050.Acc_Offset.x = sum_temp[A_X]/OFFSET_AV_NUM;
-			mpu6050.Acc_Offset.y = sum_temp[A_Y]/OFFSET_AV_NUM;
-			mpu6050.Acc_Offset.z = sum_temp[A_Z]/OFFSET_AV_NUM;
-			mpu6050.Acc_Temprea_Offset = sum_temp[TEM]/OFFSET_AV_NUM;
-			acc_sum_cnt =0;
-			mpu6050.Acc_CALIBRATE = 0;
-//			Param_SaveAccelOffset(&mpu6050.Acc_Offset);
-			sum_temp[A_X] = sum_temp[A_Y] = sum_temp[A_Z] = sum_temp[TEM] = 0;
-		}	
-	}
-
-#endif
-
-	if(mpu6050.Gyro_CALIBRATE)
-	{
-		gyro_sum_cnt++;
-		sum_temp[G_X] += mpu6050.Gyro_I16.x;
-		sum_temp[G_Y] += mpu6050.Gyro_I16.y;
-		sum_temp[G_Z] += mpu6050.Gyro_I16.z;
-		sum_temp[TEM] += mpu6050.Tempreature;
-
-    if( gyro_sum_cnt >= OFFSET_AV_NUM )
-		{
-			mpu6050.Gyro_Offset.x = (float)sum_temp[G_X]/OFFSET_AV_NUM;
-			mpu6050.Gyro_Offset.y = (float)sum_temp[G_Y]/OFFSET_AV_NUM;
-			mpu6050.Gyro_Offset.z = (float)sum_temp[G_Z]/OFFSET_AV_NUM;
-			mpu6050.Gyro_Temprea_Offset = sum_temp[TEM]/OFFSET_AV_NUM;
-			gyro_sum_cnt =0;
-			if(mpu6050.Gyro_CALIBRATE == 1)
-//				Param_SaveGyroOffset(&mpu6050.Gyro_Offset);
-			mpu6050.Gyro_CALIBRATE = 0;
-			sum_temp[G_X] = sum_temp[G_Y] = sum_temp[G_Z] = sum_temp[TEM] = 0;
-		}
-	}
-}
-
-void Transform(float itx,float ity,float itz,float *it_x,float *it_y,float *it_z)
-{
-	*it_x = itx;
-	*it_y = ity;
-	*it_z = itz;
-
-}
-
-s16 FILT_BUF[ITEMS][(FILTER_NUM + 1)];
-uint8_t filter_cnt = 0,filter_cnt_old = 0;
-
-float mpu6050_tmp[ITEMS];
-float mpu_fil_tmp[ITEMS];
-float test_ang =0,test_ang_old=0,test_ang_d,test_fli_a,test_i;
-
-void MPU6050_Data_Prepare(float T)
-{	
-	u8 i;
-	s32 FILT_TMP[ITEMS] = {0,0,0,0,0,0,0};
-//	float auto_offset_temp[3];
-  float Gyro_tmp[3];
+	mpu6050_offset_ok=MPU6050_Get_Offset();
 	
-
-	MPU6050_Data_Offset(); //校准函数
-
-	/*读取buffer原始数据*/
-	mpu6050.Acc_I16.x = ((((int16_t)mpu6050_buffer[0]) << 8) | mpu6050_buffer[1]) ;
-	mpu6050.Acc_I16.y = ((((int16_t)mpu6050_buffer[2]) << 8) | mpu6050_buffer[3]) ;
-	mpu6050.Acc_I16.z = ((((int16_t)mpu6050_buffer[4]) << 8) | mpu6050_buffer[5]) ;
- 
-	mpu6050.Gyro_I16.x = ((((int16_t)mpu6050_buffer[ 8]) << 8) | mpu6050_buffer[ 9]) ;
-	mpu6050.Gyro_I16.y = ((((int16_t)mpu6050_buffer[10]) << 8) | mpu6050_buffer[11]) ;
-	mpu6050.Gyro_I16.z = ((((int16_t)mpu6050_buffer[12]) << 8) | mpu6050_buffer[13]) ;
-	
-
-	mpu6050.Gyro_deg.x = mpu6050.Gyro.x *TO_ANGLE;
-	mpu6050.Gyro_deg.y = mpu6050.Gyro.y *TO_ANGLE;
-	mpu6050.Gyro_deg.z = mpu6050.Gyro.z *TO_ANGLE;
-	
-
-	
-//======================================================================
 }
-
-
 /******************* (C) COPYRIGHT 2014 ANO TECH *****END OF FILE************/

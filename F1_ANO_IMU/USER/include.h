@@ -53,38 +53,9 @@
 #define MAX_ACC  4096.0f						//+-8G		加速度计量程
 #define TO_DEG_S 500.0f      				//T = 2ms  默认为2ms ，数值等于1/T
 
-enum
-{
- A_X = 0,
- A_Y ,
- A_Z ,
- G_Y ,
- G_X ,
- G_Z ,
- TEM ,
- ITEMS ,
-};
 
-// CH_filter[],0横滚，1俯仰，2油门，3航向		
-enum
-{
- ROL= 0,
- PIT ,
- THR ,
- YAW ,
- AUX1 ,
- AUX2 ,
- AUX3 ,
- AUX4 ,
-};
-//=========================================
 
-typedef struct 
-{
-  float x;
-	float y;
-	float z;
-}xyz_f_t;
+
 
 typedef struct 
 {
@@ -93,27 +64,6 @@ typedef struct
 	s16 z;
 
 }xyz_s16_t;
-
-
-typedef union
-{
-	uint8_t raw_data[64];
-	struct
-	{
-		xyz_f_t Accel;
-		xyz_f_t Gyro;
-		xyz_f_t Mag;
-		xyz_f_t vec_3d_cali;
-		uint32_t mpu_flag;
-		float Acc_Temperature;
-		float Gyro_Temperature;
-	}Offset;
-}sensor_setup_t; //__attribute__((packed)) 
-
-
-
-
-
 
 #endif
 

@@ -17,9 +17,9 @@
 ..\output\main.o: timer.h
 ..\output\main.o: i2c_soft.h
 ..\output\main.o: mpu6050.h
-..\output\main.o: include.h
 ..\output\main.o: ak8975.h
-..\output\main.o: d:\Keil_v5\ARM\ARMCC\bin\..\include\stdbool.h
+..\output\main.o: include.h
 ..\output\main.o: imu.h
 ..\output\main.o: mymath.h
 ..\output\main.o: d:\Keil_v5\ARM\ARMCC\bin\..\include\math.h
+..\output\main.o: uartdebug.h
