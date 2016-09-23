@@ -82,13 +82,8 @@ int main(void)
 			ANO_AK8975_Read();				
 									
 			IMUupdate(0.01,Mpu6050_Gyo_Deg_Data[0] ,Mpu6050_Gyo_Deg_Data[1],Mpu6050_Gyo_Deg_Data[2],Mpu6050_Acc_Data[0],Mpu6050_Acc_Data[1],Mpu6050_Acc_Data[2],&Roll,&Pitch,&Yaw);
-			Send_Data(Mpu6050_Acc_Data[0],Mpu6050_Acc_Data[1],Mpu6050_Acc_Data[2],Mpu6050_Gyo_Data[0],Mpu6050_Gyo_Data[1],Mpu6050_Gyo_Data[2],AK8975_Mag_Data[0],AK8975_Mag_Data[1],AK8975_Mag_Data[2]);
-			if(Yaw>=-180.0&&Yaw<0.0){
-				tempyaw=-180.0-Yaw;
-			}
-			else{//0-180
-				tempyaw=180.0-Yaw;
-			}
+			Send_Data(Mpu6050_Acc_Data[0],Mpu6050_Acc_Data[1],Mpu6050_Acc_Data[2],Mpu6050_Gyo_Data[0]*m_gyroScale*-1,Mpu6050_Gyo_Data[1]*m_gyroScale*-1,Mpu6050_Gyo_Data[2]*m_gyroScale,AK8975_Mag_Data[0],AK8975_Mag_Data[1],AK8975_Mag_Data[2]);
+			tempyaw=Yaw*-1;
 			Data_Send_Status(Roll,Pitch,tempyaw);
 			// Data_Send_Status(Mpu6050_Gyo_Data[0]*m_gyroScale,Mpu6050_Gyo_Data[1]*m_gyroScale,Mpu6050_Gyo_Data[2]*m_gyroScale);
 			
