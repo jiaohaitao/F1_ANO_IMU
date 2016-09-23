@@ -1,5 +1,5 @@
 Dependencies for Project 'USART', Target 'jiao_stm32': (DO NOT MODIFY !)
-F (.\main.c)(0x57E0E219)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork -I..\USER -I..\CMSIS -I..\LIB\inc -I..\LIB\src-I d:\Keil_v5\ARM\RV31\INC-I d:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.1\CMSIS\Include-I d:\Keil_v5\ARM\Inc\ST\STM32F10x-DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER -DSTM32F10X_HD-o ..\output\main.o --omf_browse ..\output\main.crf --depend ..\output\main.d)
+F (.\main.c)(0x57E3CBFE)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork -I..\USER -I..\CMSIS -I..\LIB\inc -I..\LIB\src-I d:\Keil_v5\ARM\RV31\INC-I d:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.1\CMSIS\Include-I d:\Keil_v5\ARM\Inc\ST\STM32F10x-DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER -DSTM32F10X_HD-o ..\output\main.o --omf_browse ..\output\main.crf --depend ..\output\main.d)
 I (..\CMSIS\stm32f10x.h)(0x4D783CB4)
 I (..\CMSIS\core_cm3.h)(0x4D523B58)
 I (d:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x53463A44)
@@ -88,7 +88,7 @@ I (..\LIB\inc\stm32f10x_rcc.h)(0x4D783BB4)
 I (..\LIB\inc\stm32f10x_tim.h)(0x4D783BB4)
 I (..\LIB\inc\stm32f10x_usart.h)(0x4D783BB4)
 I (..\LIB\inc\misc.h)(0x4D783BB4)
-F (.\ak8975.c)(0x57E0E24F)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork -I..\USER -I..\CMSIS -I..\LIB\inc -I..\LIB\src-I d:\Keil_v5\ARM\RV31\INC-I d:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.1\CMSIS\Include-I d:\Keil_v5\ARM\Inc\ST\STM32F10x-DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER -DSTM32F10X_HD-o ..\output\ak8975.o --omf_browse ..\output\ak8975.crf --depend ..\output\ak8975.d)
+F (.\ak8975.c)(0x57E3C4B9)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork -I..\USER -I..\CMSIS -I..\LIB\inc -I..\LIB\src-I d:\Keil_v5\ARM\RV31\INC-I d:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.1\CMSIS\Include-I d:\Keil_v5\ARM\Inc\ST\STM32F10x-DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER -DSTM32F10X_HD-o ..\output\ak8975.o --omf_browse ..\output\ak8975.crf --depend ..\output\ak8975.d)
 I (ak8975.h)(0x57E0B007)
 I (..\CMSIS\stm32f10x.h)(0x4D783CB4)
 I (..\CMSIS\core_cm3.h)(0x4D523B58)
@@ -129,7 +129,7 @@ I (..\LIB\inc\stm32f10x_rcc.h)(0x4D783BB4)
 I (..\LIB\inc\stm32f10x_tim.h)(0x4D783BB4)
 I (..\LIB\inc\stm32f10x_usart.h)(0x4D783BB4)
 I (..\LIB\inc\misc.h)(0x4D783BB4)
-F (.\imu.c)(0x57E0DB84)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork -I..\USER -I..\CMSIS -I..\LIB\inc -I..\LIB\src-I d:\Keil_v5\ARM\RV31\INC-I d:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.1\CMSIS\Include-I d:\Keil_v5\ARM\Inc\ST\STM32F10x-DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER -DSTM32F10X_HD-o ..\output\imu.o --omf_browse ..\output\imu.crf --depend ..\output\imu.d)
+F (.\imu.c)(0x57E3CB3F)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork -I..\USER -I..\CMSIS -I..\LIB\inc -I..\LIB\src-I d:\Keil_v5\ARM\RV31\INC-I d:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.1\CMSIS\Include-I d:\Keil_v5\ARM\Inc\ST\STM32F10x-DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER -DSTM32F10X_HD-o ..\output\imu.o --omf_browse ..\output\imu.crf --depend ..\output\imu.d)
 I (imu.h)(0x57E0DC2C)
 I (..\CMSIS\stm32f10x.h)(0x4D783CB4)
 I (..\CMSIS\core_cm3.h)(0x4D523B58)

@@ -41,9 +41,13 @@ extern short Mpu6050_Acc_Data[3];
 extern short Mpu6050_Gyo_Data[3];
 extern float Mpu6050_Gyo_Deg_Data[3];
 
+#define	RTMATH_PI                   3.1415926535
+float m_gyroScale = RTMATH_PI / (16.4 * 180.0);
+
 int main(void)
 {
 	int i=0;
+	float tempyaw;
 	LED_GPIO_Config(); 
 	USART1_Config();
 	NVIC_Configuration();
@@ -79,7 +83,14 @@ int main(void)
 									
 			IMUupdate(0.01,Mpu6050_Gyo_Deg_Data[0] ,Mpu6050_Gyo_Deg_Data[1],Mpu6050_Gyo_Deg_Data[2],Mpu6050_Acc_Data[0],Mpu6050_Acc_Data[1],Mpu6050_Acc_Data[2],&Roll,&Pitch,&Yaw);
 			Send_Data(Mpu6050_Acc_Data[0],Mpu6050_Acc_Data[1],Mpu6050_Acc_Data[2],Mpu6050_Gyo_Data[0],Mpu6050_Gyo_Data[1],Mpu6050_Gyo_Data[2],AK8975_Mag_Data[0],AK8975_Mag_Data[1],AK8975_Mag_Data[2]);
-			Data_Send_Status(Roll,Pitch,Yaw);
+			if(Yaw>=-180.0&&Yaw<0.0){
+				tempyaw=-180.0-Yaw;
+			}
+			else{//0-180
+				tempyaw=180.0-Yaw;
+			}
+			Data_Send_Status(Roll,Pitch,tempyaw);
+			// Data_Send_Status(Mpu6050_Gyo_Data[0]*m_gyroScale,Mpu6050_Gyo_Data[1]*m_gyroScale,Mpu6050_Gyo_Data[2]*m_gyroScale);
 			
 			LED_ON_OFF();
 		}

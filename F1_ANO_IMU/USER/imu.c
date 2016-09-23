@@ -11,8 +11,8 @@
 #include "ak8975.h"
 #include "mymath.h"
 
-#define Kp 0.3f                	// proportional gain governs rate of convergence to accelerometer/magnetometer
-#define Ki 0.0f                	// 0.001  integral gain governs rate of convergence of gyroscope biases
+#define Kp 1.5f                	// proportional gain governs rate of convergence to accelerometer/magnetometer
+#define Ki 0.5f                	// 0.001  integral gain governs rate of convergence of gyroscope biases
 
 #define IMU_INTEGRAL_LIM  ( 2.0f *ANGLE_TO_RADIAN )
 #define NORM_ACC_LPF_HZ 10  		//(Hz)
